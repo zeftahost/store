@@ -1,249 +1,289 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galeri Futuristik</title>
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --card: #1f2833;
+      --accent: #00bfff;
+      --text: #eaeaea;
+      --transition: 0.6s cubic-bezier(.4,.1,.2,1);
+    }
 
-        body {
-            min-height: 100vh;
-            background: linear-gradient(45deg, #0f172a, #1e293b);
-            padding: 20px;
-        }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
 
-        .header {
-            color: white;
-            text-align: center;
-            padding: 40px 20px;
-        }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
 
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 15px;
-            background: linear-gradient(45deg, #60a5fa, #818cf8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+    header {
+      height: 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
 
-        .header p {
-            color: #94a3b8;
-            font-size: 1.1em;
-        }
+    header h1 {
+      color: var(--accent);
+      letter-spacing: 2px;
+      font-weight: 600;
+    }
 
-        .pricing-container {
-            display: grid;
-            grid-gap: 30px;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+    nav {
+      display: flex;
+      gap: 10px;
+    }
 
-        @media (min-width: 768px) {
-            .pricing-container {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
+    nav button {
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      font-weight: 500;
+    }
 
-        .pricing-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 35px 30px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
+    nav button:hover, nav button.active {
+      background: var(--accent);
+      color: var(--bg);
+      box-shadow: 0 0 18px rgba(0,191,255,0.18);
+    }
 
-        .pricing-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transform: translateX(-100%);
-            transition: 0.5s;
-        }
+    /* Slider container (3 pages) */
+    main {
+      flex: 1;
+      display: flex;
+      width: 300%;
+      transition: transform var(--transition);
+      will-change: transform;
+    }
 
-        .pricing-card:hover::before {
-            transform: translateX(100%);
-        }
+    section {
+      width: 100%;
+      height: calc(100vh - 60px);
+      flex-shrink: 0;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
 
-        .pricing-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-        }
+      /* fix flicker when transformed */
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      transform-style: preserve-3d;
+      will-change: opacity, transform;
+    }
 
-        .package-name {
-            color: #fff;
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 25px;
-            position: relative;
-            z-index: 1;
-        }
+    /* Home Section */
+    #home h2 {
+      color: var(--accent);
+      font-size: 2rem;
+      animation: fadeIn 0.9s ease forwards;
+    }
 
-        .price {
-            color: #60a5fa;
-            font-size: 36px;
-            font-weight: 700;
-            margin: 25px 0;
-            text-shadow: 0 0 20px rgba(96, 165, 250, 0.5);
-        }
+    #home p {
+      max-width: 640px;
+      text-align: center;
+      color: #cfcfcf;
+      animation: fadeInUp 1s ease 0.2s forwards;
+      opacity: 0;
+    }
 
-        .feature {
-            color: #cbd5e1;
-            padding: 15px 0;
-            font-size: 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-        }
+    /* Foto Section */
+    #foto .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 14px;
+      width: 100%;
+      max-width: 920px;
+      padding: 6px;
+    }
 
-        .feature:last-child {
-            border-bottom: none;
-        }
+    .gallery img {
+      width: 100%;
+      height: 0;
+      padding-bottom: 66%; /* keep aspect ratio */
+      object-fit: cover;
+      border-radius: 10px;
+      transition: transform 0.35s ease, filter 0.35s ease, box-shadow 0.35s ease;
+      filter: brightness(0.78);
+      display: block;
 
-        .feature:hover {
-            color: #60a5fa;
-            transform: translateX(10px);
-        }
+      /* rendering hints to avoid flicker */
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      will-change: transform, filter, opacity;
+    }
 
-        .whatsapp-button {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            background: #25D366;
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.35);
-            transition: all 0.3s ease;
-        }
+    .gallery .img-wrap{position:relative;overflow:hidden;border-radius:10px}
+    .gallery img:hover {
+      transform: scale(1.06);
+      filter: brightness(1);
+      box-shadow: 0 0 26px rgba(0,191,255,0.16);
+    }
 
-        .whatsapp-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 15px 35px rgba(37, 211, 102, 0.45);
-        }
+    /* Video Section */
+    #video .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      max-width: 920px;
+      width: 100%;
+      padding: 6px;
+    }
 
-        @media (max-width: 767px) {
-            .header h1 {
-                font-size: 1.8em;
-            }
-            .header p {
-                font-size: 0.9em;
-                padding: 0 20px;
-            }
-            .pricing-card {
-                padding: 25px 20px;
-            }
-            .package-name {
-                font-size: 20px;
-            }
-            .price {
-                font-size: 28px;
-            }
-            .feature {
-                font-size: 14px;
-                padding: 12px 0;
-            }
-            .whatsapp-button {
-                width: 50px;
-                height: 50px;
-                bottom: 20px;
-                right: 20px;
-            }
-        }
+    .video-grid video {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      border: 2px solid rgba(0,191,255,0.12);
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+      display: block;
 
-        /* Glow effect for cards */
-        .pricing-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #60a5fa, #818cf8);
-        }
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      will-change: transform;
+    }
 
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
+    .video-grid video:hover {
+      box-shadow: 0 0 30px rgba(0,191,255,0.18);
+      transform: scale(1.02);
+    }
 
-        ::-webkit-scrollbar-track {
-            background: #1e293b;
-        }
+    /* small helper when using local images: keep visibility stable */
+    img[src^="file:"]{opacity:1}
 
-        ::-webkit-scrollbar-thumb {
-            background: #60a5fa;
-            border-radius: 5px;
-        }
+    /* Animations */
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(-12px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: #818cf8;
-        }
-    </style>
+    @keyframes fadeInUp {
+      from {opacity: 0; transform: translateY(12px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    @media (max-width: 768px) {
+      #home h2 {font-size: 1.5rem;}
+      nav button {padding: 6px 12px; font-size: 0.9rem;}
+      .gallery img{padding-bottom:66%}
+    }
+  </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Digital Ocean VPS Paket</h1>
-        <p>Jelajahi paket yang sempurna untuk proyek Anda dengan VPS Singapore berkinerja tinggi.</p>
-    </div>
+  <header>
+    <h1>GALERI</h1>
+    <nav>
+      <button class="active" data-index="0">Home</button>
+      <button data-index="1">Foto</button>
+      <button data-index="2">Video</button>
+    </nav>
+  </header>
 
-    <div class="pricing-container">
-        <div class="pricing-card">
-            <div class="package-name">Paket Gold 1</div>
-            <div class="price">Rp20.000/month</div>
-            <div class="feature">2 vCPU</div>
-            <div class="feature">2GB RAM</div>
-            <div class="feature">60GB SSD</div>
-            <div class="feature">3TB Bandwidth</div>
-        </div>
+  <main id="slider">
+    <section id="home">
+      <h2>Selamat Datang di Galeri Futuristik</h2>
+      <p>Jelajahi koleksi foto dan video dengan desain bertema dark futuristik dan efek neon biru yang menawan.</p>
+    </section>
 
-        <div class="pricing-card">
-            <div class="package-name">Paket Gold 2</div>
-            <div class="price">Rp30.000/month</div>
-            <div class="feature">2 vCPUs</div>
-            <div class="feature">4GB RAM</div>
-            <div class="feature">80GB SSD</div>
-            <div class="feature">4TB Bandwidth</div>
-        </div>
+    <section id="foto">
+      <h2 style="color:var(--accent)">Galeri Foto</h2>
+      <div class="gallery" id="gallery">
+        <div class="img-wrap"><img loading="eager" src="https://picsum.photos/600/400?random=1" alt="Foto 1"></div>
+        <div class="img-wrap"><img loading="eager" src="https://picsum.photos/600/400?random=2" alt="Foto 2"></div>
+        <div class="img-wrap"><img loading="eager" src="https://picsum.photos/600/400?random=3" alt="Foto 3"></div>
+        <div class="img-wrap"><img loading="eager" src="https://picsum.photos/600/400?random=4" alt="Foto 4"></div>
+        <div class="img-wrap"><img loading="eager" src="https://picsum.photos/600/400?random=5" alt="Foto 5"></div>
+        <div class="img-wrap"><img loading="eager" src="https://picsum.photos/600/400?random=6" alt="Foto 6"></div>
+      </div>
+    </section>
 
-        <div class="pricing-card">
-            <div class="package-name">Paket Gold 3</div>
-            <div class="price">Rp50.000/month</div>
-            <div class="feature">4 vCPUs</div>
-            <div class="feature">8GB RAM</div>
-            <div class="feature">160GB SSD</div>
-            <div class="feature">5TB Bandwidth</div>
-        </div>
+    <section id="video">
+      <h2 style="color:var(--accent)">Galeri Video</h2>
+      <div class="video-grid">
+        <video controls src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
+        <video controls src="https://www.w3schools.com/html/movie.mp4"></video>
+      </div>
+    </section>
+  </main>
 
-        <div class="pricing-card">
-            <div class="package-name">Paket Gold 4</div>
-            <div class="price">Rp65.000/month</div>
-            <div class="feature">2 vCPUs</div>
-            <div class="feature">16GB RAM</div>
-            <div class="feature">50GB SSD</div>
-            <div class="feature">4TB Bandwidth</div>
-        </div>
-    </div>
+  <script>
+    const slider = document.getElementById('slider');
+    const navButtons = document.querySelectorAll('nav button');
+    const gallery = document.getElementById('gallery');
 
-    <a href="https://wa.me/628818613893" class="whatsapp-button" target="_blank">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-        </svg>
-    </a>
+    function goTo(index){
+      // use translate3d to force GPU compositing (helps with flicker)
+      slider.style.transform = `translate3d(-${index * 100}%,0,0)`;
+      navButtons.forEach(b => b.classList.remove('active'));
+      navButtons[index].classList.add('active');
+
+      // ensure images are visible (force repaint for some browsers)
+      // by toggling a tiny opacity trick if needed
+      if(index === 1){
+        const imgs = gallery.querySelectorAll('img');
+        imgs.forEach((img, i) => {
+          // if image not yet fully loaded, ensure it paints when loaded
+          if(!img.complete){
+            img.addEventListener('load', ()=>{
+              img.style.opacity = '1';
+            });
+          } else {
+            // force layer paint
+            img.style.transform = 'translateZ(0)';
+          }
+        });
+      }
+    }
+
+    navButtons.forEach(btn => {
+      btn.addEventListener('click', () => goTo(Number(btn.dataset.index)));
+    });
+
+    // Swipe gesture for mobile
+    let startX = 0;
+    slider.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+    slider.addEventListener('touchend', e => {
+      const endX = e.changedTouches[0].clientX;
+      const diff = startX - endX;
+      const activeIndex = [...navButtons].findIndex(b => b.classList.contains('active'));
+      if (diff > 50 && activeIndex < 2) goTo(activeIndex + 1);
+      else if (diff < -50 && activeIndex > 0) goTo(activeIndex - 1);
+    });
+
+    // keyboard navigation
+    document.addEventListener('keydown', e => {
+      const activeIndex = [...navButtons].findIndex(b => b.classList.contains('active'));
+      if(e.key === 'ArrowRight' && activeIndex < 2) goTo(activeIndex + 1);
+      if(e.key === 'ArrowLeft' && activeIndex > 0) goTo(activeIndex - 1);
+    });
+
+    // initial small paint fix for some browsers
+    window.addEventListener('load', ()=>{
+      document.querySelectorAll('img').forEach(img=>{ img.style.opacity='1'; });
+    });
+  </script>
 </body>
 </html>
-
